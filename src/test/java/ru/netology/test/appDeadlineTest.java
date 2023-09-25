@@ -63,7 +63,7 @@ public class appDeadlineTest {
 
         var amount = DataHelp.generateAmount(firstCardBalance);
 
-        var infoTransfer = new DataHelp.APICardInfoForTransfer(  DataHelp.getFirstCadr().getNum(), DataHelp.getSecondCadr().getNum(), amount); //err
+        var infoTransfer = new DataHelp.APICardInfoForTransfer(  DataHelp.getSecondCadr().getNum(), DataHelp.getFirstCadr().getNum(), amount); //err
 
         DataHelp.sendRequestSpecTransfer(token, infoTransfer);
 
