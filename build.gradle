@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 11
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    implementation group: 'com.codeborne', name: 'selenide', version: '6.17.0'
+    testImplementation 'com.github.javafaker:javafaker:1.0.2'
+    testImplementation 'org.slf4j:slf4j-simple:2.0.5'
+
+    testImplementation 'io.rest-assured:rest-assured:5.3.0'
+
+    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.1.0'
+    implementation group: 'commons-dbutils', name: 'commons-dbutils', version: '1.8.1'
+
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.28'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty 'selenide.headless', System.getProperty('selenide.headless')
+}
