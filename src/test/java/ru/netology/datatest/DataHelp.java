@@ -25,25 +25,6 @@ public class DataHelp {
         private String password;
     }
     @Value
-    public static class TransferInfo {
-        String cardFirst;
-        String cardSecond;
-        Integer amount;
-    }
-    @Value
-    public static class CardInfoForTransfer {
-        String id;
-        String number;
-        Integer balance;
-    }
-
-    @Value
-    public static class APICardInfoForTransfer {
-        String from;
-        String to;
-        int amount;
-    }
-    @Value
     public static class CardInfo {
         private String id;
         private String num;
@@ -84,93 +65,5 @@ public class DataHelp {
 
     public static VerificationCode getInvalidVerificationCodeFor() {
         return new VerificationCode(faker.numerify("#####"));
-    }
-
-    private static RequestSpecification requestSpec = new RequestSpecBuilder()
-            .setBaseUri("http://localhost")
-            .setPort(9999)
-            .setAccept(ContentType.JSON)
-            .setContentType(ContentType.JSON)
-            .log(LogDetail.ALL)
-            .build();
-
-
-    public static void sendRequestSpecAuth() {
-        given()
-                .spec(requestSpec)
-                .body("{" +
-                        "  login:" + getAuthInfo().getLogin() + "," +
-                        "  password:" + getAuthInfo().getPassword() + " " +
-                        "}")
-                .when()
-                .post("/api/auth")
-                .then()
-                .statusCode(200);
-
-    }
-
-    public static String sendRequestSpecVerification(String code) {
-        Response response = given()
-                .spec(requestSpec)
-                .body("{" +
-                        "  login:  " + getAuthInfo().getLogin() + "," +
-                        "  code:   " + code +
-                        "}")
-                .when()
-                .post("/api/auth/verification")
-                .then()
-                .statusCode(200)
-                .extract()
-                .response();
-
-        String token = response.path("token");
-
-        return token;
-
-    }
-
-
-    public static Map<String, Integer> sendRequestSpecCards(String token) {
-        CardInfoForTransfer[] infoCard = given()
-                .spec(requestSpec)
-                .headers(
-                        "Authorization",
-                        "Bearer " +token,
-                        "Content-Type",
-                        ContentType.JSON,
-                        "Accept",
-                        ContentType.JSON)
-                .when()
-                .get("/api/cards")
-                .then()
-                .statusCode(200)
-                .extract()
-                .body()
-                .as(CardInfoForTransfer[].class);
-
-        Map<String, Integer> cardAmount = new HashMap<>();
-        for(CardInfoForTransfer cardInfo : infoCard){
-            cardAmount.put(cardInfo.getId(), cardInfo.getBalance());
-        }
-        return cardAmount;
-    }
-
-
-    public static void sendRequestSpecTransfer(String token, APICardInfoForTransfer transferInfo) {
-        given()
-                .spec(requestSpec)
-                .headers(
-                        "Authorization",
-                        "Bearer " + token,
-                        "Content-Type",
-                        ContentType.JSON,
-                        "Accept",
-                        ContentType.JSON)
-                .body(transferInfo)
-                .when()
-                .post("/api/transfer")
-                .then()
-                .statusCode(200);
-
     }
 }
